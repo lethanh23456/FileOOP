@@ -5,7 +5,7 @@ import java.util.*;
 
 public class J07004 {
     public static void main (String[] args){
-        File x = new File("DATA.IN");
+        File x = new File("DATA.in");
         try {
             Scanner sc = new Scanner(x);
             HashMap<Integer,Integer> mp = new HashMap<Integer,Integer>();
@@ -18,9 +18,9 @@ public class J07004 {
                     mp.put(n, mp.get(n) + 1);
                 }
             }
-            for (Map.Entry<Integer,Integer> e : mp.entrySet()){
-                System.out.println(e.getKey()+ " " + e.getValue());
-            }
+            mp.forEach((k,v) -> {
+                System.out.println(k + " " + v);
+            });
 
         } catch (FileNotFoundException e){
 

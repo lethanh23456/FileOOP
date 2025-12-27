@@ -1,29 +1,23 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Scanner;
 import java.util.*;
 
 public class J07005 {
-    public static void main (String[] args){
-        File x = new File("DATA.IN");
-        try {
-            Scanner sc = new Scanner(x);
-            HashMap<Integer,Integer> mp = new HashMap<Integer,Integer>();
-            while (sc.hasNext()){
-                int n = sc.nextInt();
-                if (mp.get(n) == null) {
-                    mp.put(n,1);
-                }
-                else {
-                    mp.put(n, mp.get(n) + 1);
-                }
-            }
-            for (Map.Entry<Integer,Integer> e : mp.entrySet()){
-                System.out.println(e.getKey()+ " " + e.getValue());
-            }
+    public static void main (String[] args) throws IOException {
+        DataInputStream is = new DataInputStream(new FileInputStream("DATA.IN"));
+        TreeMap<Integer,Integer> mp = new TreeMap<>();
 
-        } catch (FileNotFoundException e){
-
+        for (int i = 0 ; i < 100000 ; i++){
+            int x = is.readInt();
+            if (mp.get(x) == null) {
+                mp.put(x,1);
+            }
+            else {
+                mp.put(x,mp.get(x)+1);
+            }
         }
+        mp.forEach((k,v) -> {
+            System.out.println(k+" "+v);
+        });
     }
 }
