@@ -1,9 +1,100 @@
-2
-Nguyen Van Hoang
-55B1
-01/01/2021
-05/01/2021
-Nguyen Trung Dung
-04C6
-01/01/2021
-10/01/2021
+import java.util.*;
+
+class Employee {
+    String id;
+    String name;
+    String positionCode;
+    int salaryRatio;
+    int employeeNumber;
+
+    public Employee(String id, String name) {
+        this.id = id;
+        this.name = name;
+        this.positionCode = id.substring(0, 2);
+        this.salaryRatio = Integer.parseInt(id.substring(2, 4));
+        this.employeeNumber = Integer.parseInt(id.substring(4));
+    }
+
+    @Override
+    public String toString() {
+        return name + " " + positionCode + " " + String.format("%03d", employeeNumber) + " " + String.format("%02d", salaryRatio);
+    }
+}
+
+public class EmployeeManagement {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            int n = Integer.parseInt(scanner.nextLine());
+            List<Employee> employees = new ArrayList<>();
+            int gdCount = 0;
+            int tpCount = 0;
+            int ppCount = 0;
+
+            for (int i = 0; i < n; i++) {
+                String line = scanner.nextLine();
+                // Handle cases where name comes first (as in example)
+                if (Character.isLetter(line.charAt(0)) && !line.substring(0, 2).equals("GD") && !line.substring(0, 2).equals("TP") && !line.substring(0, 2).equals("PP") && !line.substring(0, 2).equals("NV")) {
+                    String[] parts = line.split(" ");
+                    String id = parts[parts.length - 2] + parts[parts.length - 1];
+                    String name = String.join(" ", Arrays.copyOfRange(parts, 0, parts.length - 2));
+                    line = id + " " + name;
+                }
+
+                String id = line.split(" ")[0];
+                String name = line.substring(id.length() + 1);
+
+                String originalId = id;
+                String positionCode = id.substring(0, 2);
+
+                if (positionCode.equals("GD")) {
+                    gdCount++;
+                    if (gdCount >= 2) {
+                        id = "NV" + id.substring(2);
+                    }
+                } else if (positionCode.equals("TP")) {
+                    tpCount++;
+                    if (tpCount >= 4) {
+                        id = "NV" + id.substring(2);
+                    }
+                } else if (positionCode.equals("PP")) {
+                    ppCount++;
+                    if (ppCount >= 4) {
+                        id = "NV" + id.substring(2);
+                    }
+                }
+
+                employees.add(new Employee(id, name));
+            }
+
+            int m = Integer.parseInt(scanner.nextLine());
+            for (int i = 0; i < m; i++) {
+                String queryPos = scanner.nextLine().trim();
+                List<Employee> filteredList = new ArrayList<>();
+                for (Employee emp : employees) {
+                    if (emp.positionCode.equals(queryPos)) {
+                        filteredList.add(emp);
+                    }
+                }
+
+                filteredList.sort((e1, e2) -> {
+                    if (e1.salaryRatio != e2.salaryRatio) {
+                        return Integer.compare(e2.salaryRatio, e1.salaryRatio); // Descending salary
+                    } else {
+                        return Integer.compare(e1.employeeNumber, e2.employeeNumber); // Ascending number
+                    }
+                });
+
+                for (Employee emp : filteredList) {
+                    System.out.println(emp);
+                }
+                System.out.println(); // Empty line after each group
+            }
+
+        } catch (Exception e) {
+            // Handle input errors
+        } finally {
+            scanner.close();
+        }
+    }
+}
